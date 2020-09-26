@@ -15,3 +15,4 @@ class adminItem(admin.ModelAdmin):
 
 admin.site.register(Item,adminItem)
 admin.site.register(Category)
+admin.site.register(ItemImage)

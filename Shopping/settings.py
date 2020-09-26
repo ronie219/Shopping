@@ -25,7 +25,7 @@ SECRET_KEY = '*!f2w-!xc0u=tw5*o=6yt#p$0h=eayx1dj9(!+q)ao$_tb8bo='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['laptop-q4bl415t']
 
 
 # Application definition

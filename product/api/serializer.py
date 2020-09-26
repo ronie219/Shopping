@@ -1,7 +1,12 @@
 from rest_framework import serializers
 
-from product.models import Category, Item
+from product.models import Category, Item, ItemImage
 
+class imageSerializer(serializers.ModelSerializer):
+    item = serializers.IntegerField(required=False)
+    class Meta:
+        fields = '__all__'
+        model = ItemImage
 
 class categorySerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -33,6 +38,7 @@ class categorySerializer(serializers.Serializer):
 
 class itemSerializer(serializers.ModelSerializer):
     message = serializers.SerializerMethodField(read_only=True)
+    image = imageSerializer(many=True)
 
     class Meta:
         fields = (
@@ -44,9 +50,11 @@ class itemSerializer(serializers.ModelSerializer):
             'description',
             'count',
             'message',
+            'image',
         )
         model = Item
         depth = 0
+        read_only_field = ("image")
 
     def validate(self, data):
         name = data.get('name')
@@ -60,8 +68,15 @@ class itemSerializer(serializers.ModelSerializer):
 
         return data
 
-    def create(self, validate_date):
-        return Item.objects.create(**validate_date)
+    def create(self, validate_date,**kwagrs):
+        image = validate_date.pop('image')
+        item = Item.objects.create(**validate_date)
+        print(len(image))
+        for img in image:
+            ItemImage.objects.create(img, item=item)
+        return item
 
     def get_message(self, obj):
         return "Item added successfully"
+
+

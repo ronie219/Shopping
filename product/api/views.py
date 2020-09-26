@@ -47,7 +47,7 @@ class categoryCreations(APIView):
         print(request)
         try:
             if id:
-                instance = Category.objects.get(id=id).delete()
+                Category.objects.get(id=id).delete()
                 return Response({"Error Message": "Delete SuccessFully"}, status=200)
             else:
                 return Response({"Error Message": "Id is Must"}, status=404)
@@ -76,6 +76,8 @@ class itemCreations(ListAPIView, CreateModelMixin, UpdateModelMixin, DestroyMode
     #     return obj
 
     def post(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id
+        print(request.data)
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
