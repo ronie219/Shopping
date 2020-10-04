@@ -55,9 +55,13 @@ class categoryCreations(APIView):
             return Response({"Error Message": "No Category Found"}, status=404)
 
 
-class itemCreations(ListAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
+class itemCreations(ListAPIView,
+                    CreateModelMixin, 
+                    UpdateModelMixin, 
+                    DestroyModelMixin):
     serializer_class = itemSerializer
-    lookup_field = 'id'
+    lookup_field = 'id',
+    # queryset = Item.objects.all()
 
     def get_queryset(self):
         super_qs = Item.objects.all()
@@ -65,26 +69,25 @@ class itemCreations(ListAPIView, CreateModelMixin, UpdateModelMixin, DestroyMode
         if qs is not None:
             super_qs = Item.objects.filter(id=qs)
         return super_qs
-    #
-    # def get_object(self):
-    #     passed_id = self.request.GET.get('id')
-    #     query_set = self.get_queryset()
-    #     obj = None
-    #     if passed_id is not None:
-    #         obj = get_object_or_404(query_set, id=passed_id)
-    #         self.check_object_permissions(self.request, obj)
-    #     return obj
+
+    def get_object(self):
+        passed_id = self.request.GET.get('id')
+        query_set = self.get_queryset()
+        obj = None
+        if passed_id is not None:
+            obj = get_object_or_404(query_set, id=passed_id)
+            self.check_object_permissions(self.request, obj)
+        return obj
 
     def post(self, request, *args, **kwargs):
         request.data['user'] = request.user.id
-        print(request.data)
         return self.create(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    # def put(self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    # def patch(self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    # def delete(self, request, *args, **kwargs):
+    #     return self.destroy(request, *args, **kwargs)

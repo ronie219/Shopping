@@ -28,7 +28,7 @@ class Item(models.Model):
     count = models.IntegerField(default=0)
 
     @property
-    def images(self):
+    def image(self):
         return self.image_set.all()
 
     def __str__(self):
